@@ -5,6 +5,8 @@
     "main": "dist/index.js",
     "type": "module",
     "scripts": {
+        "postinstall": "tsc",
+        "deploy": "git add . && git commit -m Heroku && git push heroku master",
         "dev": "nodemon index.ts"
     },
     "author": "",
