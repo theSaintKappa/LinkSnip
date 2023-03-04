@@ -13,7 +13,7 @@ const randomKey = (n) => {
 
 router.post('/', async (req, res) => {
     try {
-        if (!/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(req.body.url)) return res.status(400).json({ code: 400, message: 'Invalid URL' });
+        if (!/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(req.body.url) || /(?:https?:\/\/)?snip\.gay\/?.*/.test(req.body.url)) return res.status(400).json({ code: 400, message: 'Invalid URL' });
         const url = !/^https?:\/\//i.test(req.body.url) ? `https://${req.body.url}` : req.body.url;
         const snipId: string = randomKey(3);
 
