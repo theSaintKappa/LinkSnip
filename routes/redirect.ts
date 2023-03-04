@@ -17,7 +17,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        res.status(200).send('root');
+        res.status(301).redirect('https://app.snip.gay');
     } catch (err) {
         console.error(err);
         return res.status(400).send('Bad Request');
