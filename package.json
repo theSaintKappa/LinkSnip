@@ -1,6 +1,6 @@
 {
     "name": "link-snip",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Snip your long URLs in the snap of a finger!",
     "main": "dist/index.js",
     "type": "module",
