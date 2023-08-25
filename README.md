@@ -33,26 +33,26 @@ APP_URL=[your public app url]
 
 #### Request headers:
 
-```json
-'Content-Type': 'application/json'
+```css
+content-type: application/json;
 ```
 
-#### Request body:
+#### Request body (JSON):
 
-```json
+```js
 { "url": "example.com" }
-# Note: if you don't provide a url protocol, your snip will default to https
+// Note: if you don't provide a url protocol, your snip will default to https
 ```
 
 #### Example response:
 
 ```json
 {
-    snipId: "DjX",
-    snipUrl: "https://snip.gay/DjX"
-    redirectUrl: "https://github.com/theSaintKappa",
-    createdAt: "2023-08-24T22:24:59.096Z",
-    alreadyExisted: true
+    "snipId": "DjX",
+    "snipUrl": "https://snip.gay/DjX",
+    "redirectUrl": "https://github.com/theSaintKappa",
+    "createdAt": "2023-08-24T22:24:59.096Z",
+    "alreadyExisted": true
 }
 ```
 
