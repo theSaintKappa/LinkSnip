@@ -1,25 +1,25 @@
 import express from 'express';
-const router = express.Router();
+import path from 'path';
 import { snipRepository } from '../redis.js';
+const router = express.Router();
 
 router.get('/:id', async (req, res) => {
     try {
         const linkSnip = await snipRepository.search().where('snipId').equals(req.params.id).return.first();
 
-        if (!linkSnip) return res.status(301).redirect(`https://app.snip.gay/notfound`);
+        if (!linkSnip) return res.status(200).sendFile(path.resolve() + '/public/dist/notFound/index.html');
 
         res.setHeader('Cache-Control', 'public, max-age=86400');
 
         if (typeof req.query.json !== 'undefined' && req.query.json !== 'false') return res.status(200).send(linkSnip);
 
-        //@ts-ignore
-        res.status(301).redirect(linkSnip.redirectUrl);
+        res.status(301).redirect(linkSnip.redirectUrl.toString());
     } catch (err) {
         console.error(err);
         return res.status(400).json({ code: 400, message: 'Bad request' });
     }
 });
 
-router.get('/', async (req, res) => res.status(301).redirect('https://app.snip.gay'));
+router.get('/', async (req, res) => res.status(200).sendFile('index.html'));
 
 export default router;

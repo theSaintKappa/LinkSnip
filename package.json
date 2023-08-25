@@ -1,10 +1,11 @@
 {
     "name": "link-snip",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Snip your long URLs in the snap of a finger!",
     "main": "dist/index.js",
     "type": "module",
     "scripts": {
+        "preinstall": "cd public && npm install && npm run build && cd ../",
         "postinstall": "tsc",
         "deploy": "git add . && git commit -m Heroku && git push heroku master",
         "dev": "nodemon index.ts"
@@ -13,15 +14,16 @@
     "license": "MIT",
     "dependencies": {
         "cors": "^2.8.5",
-        "dotenv": "^16.0.3",
+        "dotenv": "^16.3.1",
         "express": "^4.18.2",
-        "express-rate-limit": "^6.7.0",
-        "redis": "^4.6.5",
-        "redis-om": "^0.4.0-beta.2"
+        "express-rate-limit": "^6.9.0",
+        "redis": "^4.6.8",
+        "redis-om": "^0.4.2"
     },
     "devDependencies": {
+        "@types/cors": "^2.8.13",
         "@types/express": "^4.17.17",
-        "@types/node": "^18.15.3",
-        "typescript": "^5.0.2"
+        "@types/node": "^20.5.6",
+        "typescript": "^5.2.2"
     }
 }
