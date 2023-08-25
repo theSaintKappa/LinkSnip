@@ -6,7 +6,7 @@ redis.on('error', (err) => console.log('Redis Client Error', err));
 await redis.connect();
 
 const snipSchema = new Schema('snip', {
-    snipId: { type: 'string' },
+    snipId: { type: 'string', caseSensitive: true },
     snipUrl: { type: 'string' },
     redirectUrl: { type: 'string' },
     createdAt: { type: 'date' },

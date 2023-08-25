@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import express from 'express';
-import { snipRepository } from '../redis.js';
+import { snipRepository } from '../snipSchema.js';
 const router = express.Router();
 
 const CHARACTERS: string = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

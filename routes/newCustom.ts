@@ -1,12 +1,13 @@
 import express from 'express';
+import { snipRepository } from '../snipSchema.js';
 const router = express.Router();
-import { snipRepository } from '../redis.js';
 
 router.post('/', async (req, res) => {
     try {
         if (!req.body.url || !req.body.key) return res.status(400).json({ code: 400, message: 'Invalid request body' });
 
-        if (!/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(req.body.url) || /(?:https?:\/\/)?snip\.gay\/?.*/.test(req.body.url)) return res.status(400).json({ code: 400, message: 'Invalid URL' });
+        if (!/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(req.body.url) || /(?:https?:\/\/)?snip\.gay\/?.*/.test(req.body.url))
+            return res.status(400).json({ code: 400, message: 'Invalid URL' });
 
         if (!/[a-zA-Z]/.test(req.body.key)) return res.status(400).json({ code: 400, message: 'Key must be a string of letters /[a-zA-Z]/' });
 

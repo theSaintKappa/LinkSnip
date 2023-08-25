@@ -1,6 +1,6 @@
 import express from 'express';
 import path from 'path';
-import { snipRepository } from '../redis.js';
+import { snipRepository } from '../snipSchema.js';
 const router = express.Router();
 
 router.get('/:id', async (req, res) => {
