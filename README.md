@@ -33,8 +33,8 @@ APP_URL=[your public app url]
 
 #### Request headers:
 
-```css
-content-type: application/json;
+```
+Content-Type: application/json;
 ```
 
 #### Request body (JSON):
