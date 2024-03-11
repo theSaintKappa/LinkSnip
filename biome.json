@@ -1,0 +1,15 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+    "formatter": {
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 320
+    },
+    "linter": {
+        "rules": {
+            "a11y": {
+                "noSvgWithoutTitle": "off"
+            }
+        }
+    }
+}

@@ -1,31 +1,31 @@
-import JSConfetti from 'js-confetti';
-import './style.css';
+import JSConfetti from "js-confetti";
+import "./style.css";
 const jsConfetti = new JSConfetti();
 
 const CUT_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="white"><path d="M256 192l-39.5-39.5c4.9-12.6 7.5-26.2 7.5-40.5C224 50.1 173.9 0 112 0S0 50.1 0 112s50.1 112 112 112c14.3 0 27.9-2.7 40.5-7.5L192 256l-39.5 39.5c-12.6-4.9-26.2-7.5-40.5-7.5C50.1 288 0 338.1 0 400s50.1 112 112 112s112-50.1 112-112c0-14.3-2.7-27.9-7.5-40.5L499.2 76.8c7.1-7.1 7.1-18.5 0-25.6c-28.3-28.3-74.1-28.3-102.4 0L256 192zm22.6 150.6L396.8 460.8c28.3 28.3 74.1 28.3 102.4 0c7.1-7.1 7.1-18.5 0-25.6L342.6 278.6l-64 64zM64 112a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm48 240a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" /></svg>`;
 
 let displayedSnip = false;
 
-const url = document.querySelector('[data-url]') as HTMLInputElement;
-const cut = document.querySelector('[data-cut]') as HTMLElement;
+const url = document.querySelector("[data-url]") as HTMLInputElement;
+const cut = document.querySelector("[data-cut]") as HTMLElement;
 cut.innerHTML = CUT_ICON;
 
 async function generateSnip() {
     if (displayedSnip) {
-        url.value = '';
+        url.value = "";
         cut.innerHTML = CUT_ICON;
         displayedSnip = false;
         return;
     }
 
-    if (url.value === '' || !/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(url.value)) {
-        url.value = 'Invalid URL';
+    if (url.value === "" || !/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/.test(url.value)) {
+        url.value = "Invalid URL";
         selectInput();
         shakeInput();
         return;
     }
 
-    if (/(?:https?:\/\/)?snip\.gay\/?.*/.test(url.value)) {
+    if (/(?:https?:\/\/)?link\.saintkappa\.dev\/?.*/.test(url.value)) {
         url.value = "You can't snip a snip!";
         selectInput();
         shakeInput();
@@ -33,10 +33,10 @@ async function generateSnip() {
     }
 
     cut.innerHTML = `<svg class="dots" width="36" height="10" viewBox="0 0 36 10" fill="#D9D9D9" xmlns="http://www.w3.org/2000/svg"><circle id="dot1" cx="5" cy="5" r="5" /><circle id="dot2" cx="18" cy="5" r="5" /><circle id="dot3" cx="31" cy="5" r="5" /></svg>`;
-    const res = await fetch('https://snip.gay/api/new', {
-        method: 'POST',
+    const res = await fetch("https://link.saintkappa.dev/api/new", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
         body: JSON.stringify({ url: url.value }),
     });
@@ -55,20 +55,17 @@ function selectInput() {
     url.setSelectionRange(0, 99999); // for mobile
 }
 
-const input = document.querySelector('[data-input]') as HTMLElement;
+const input = document.querySelector("[data-input]") as HTMLElement;
 function shakeInput() {
-    input.animate(
-        [{ transform: 'translateX(0)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(-10px)' }, { transform: 'translateX(0)' }],
-        {
-            duration: 400,
-            easing: 'linear',
-        }
-    );
+    input.animate([{ transform: "translateX(0)" }, { transform: "translateX(10px)" }, { transform: "translateX(-10px)" }, { transform: "translateX(10px)" }, { transform: "translateX(-10px)" }, { transform: "translateX(0)" }], {
+        duration: 400,
+        easing: "linear",
+    });
 }
 
 cut.onclick = async () => generateSnip();
 url.onkeyup = (e) => {
-    if (e.key !== 'Enter') return;
+    if (e.key !== "Enter") return;
     generateSnip();
 };
 
@@ -79,21 +76,26 @@ url.oninput = () => {
 };
 
 // API Modal
-const openModal = document.querySelector('[data-open-modal]') as HTMLElement;
-const closeModal = document.querySelector('[data-close-modal]') as HTMLElement;
-const modal = document.querySelector('[data-modal-wrapper]') as HTMLElement;
-const apiVersion = document.querySelector('[data-api-version]') as HTMLElement;
+const openModal = document.querySelector("[data-open-modal]") as HTMLElement;
+const closeModal = document.querySelector("[data-close-modal]") as HTMLElement;
+const modal = document.querySelector("[data-modal-wrapper]") as HTMLElement;
+const apiVersion = document.querySelector("[data-api-version]") as HTMLElement;
 
-let data: any;
+let data: typeof import("../../package.json");
 openModal.onclick = async () => {
-    modal.style.display = 'grid';
-    modal.animate([{ opacity: '0' }, { opacity: '1' }], { duration: 250, easing: 'ease' });
+    modal.style.display = "grid";
+    modal.animate([{ opacity: "0" }, { opacity: "1" }], {
+        duration: 250,
+        easing: "ease",
+    });
 
     apiVersion.textContent = `v${data.version}`;
 };
-closeModal.onclick = () => (modal.style.display = 'none');
+closeModal.onclick = () => {
+    modal.style.display = "none";
+};
 
 (async () => {
-    const res = await fetch('https://raw.githubusercontent.com/theSaintKappa/LinkSnip/master/package.json');
+    const res = await fetch("https://raw.githubusercontent.com/theSaintKappa/LinkSnip/master/package.json");
     data = await res.json();
 })();

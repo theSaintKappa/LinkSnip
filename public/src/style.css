@@ -6,14 +6,14 @@
 
 @font-face {
     font-display: swap;
-    font-family: 'Signika';
+    font-family: "Signika";
     font-style: normal;
     font-weight: 500;
-    src: url('../fonts/signika-v20-latin-500.woff2') format('woff2'), url('../fonts/signika-v20-latin-500.woff') format('woff');
+    src: url("../fonts/signika-v20-latin-500.woff2") format("woff2"), url("../fonts/signika-v20-latin-500.woff") format("woff");
 }
 
 :root {
-    font-family: 'Signika', sans-serif;
+    font-family: "Signika", sans-serif;
 
     line-height: 1.5;
     color-scheme: dark light;
@@ -295,7 +295,7 @@ footer {
 /* LIGHT THEME */
 @media (prefers-color-scheme: light) {
     html {
-      background-color: var(--clr-light-background);
+        background-color: var(--clr-light-background);
     }
     h1 {
         color: var(--clr-light-text);
@@ -320,7 +320,7 @@ footer {
 /* DARK THEME */
 @media (prefers-color-scheme: dark) {
     html {
-      background-color: var(--clr-dark-background);
+        background-color: var(--clr-dark-background);
     }
     h1 {
         color: var(--clr-dark-text);
@@ -338,4 +338,3 @@ footer {
         background-color: var(--clr-dark-input-hover);
     }
 }
-

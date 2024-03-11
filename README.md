@@ -1,6 +1,6 @@
-# LinkSnip <img src="https://snip.gay/icon.png" height="24">
+# LinkSnip <img src="https://link.saintkappa.dev/icon.png" height="24">
 
-### Snip your long URLs in the snap of a finger! https://snip.gay
+### Snip your long URLs in the snap of a finger! https://link.saintkappa.dev
 
 > ➡️ Add `?json` to the end of a sniped url to get the raw json response instead of being redirected.
 
@@ -49,7 +49,7 @@ Content-Type: application/json;
 ```json
 {
     "snipId": "DjX",
-    "snipUrl": "https://snip.gay/DjX",
+    "snipUrl": "https://link.saintkappa.dev/DjX",
     "redirectUrl": "https://github.com/theSaintKappa",
     "createdAt": "2023-08-24T22:24:59.096Z",
     "alreadyExisted": true
@@ -60,7 +60,7 @@ Content-Type: application/json;
 
 ```bash
 $ curl --request POST \
-    https://snip.gay/api/new \
+    https://link.saintkappa.dev/api/new \
     --header 'Content-Type: application/json' \
     --data '{ "url": "https://github.com/theSaintKappa" }'
 ```

@@ -7,14 +7,14 @@
         <meta name="keywords" content="tinyurl, bit.ly, url shortener, shortener, long urls, link shortener" />
         <meta name="author" content="SaintKappa" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta property="og:title" content="snip.gay URL shortener" />
+        <meta property="og:title" content="link.saintkappa.dev URL shortener" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://snip.gay" />
-        <meta property="og:image" content="https://app.snip.gay/icon.png" />
-        <meta property="og:image:secure_url" content="http://app.snip.gay/icon.png" />
+        <meta property="og:url" content="https://link.saintkappa.dev" />
+        <meta property="og:image" content="https://link.saintkappa.dev/icon.png" />
+        <meta property="og:image:secure_url" content="http://link.saintkappa.dev/icon.png" />
         <meta property="og:description" content="Snip your long URLs in the snap of a finger!" />
         <meta name="theme-color" content="#13111c" />
-        <title>snip.gay URL shortener</title>
+        <title>LinkSnip</title>
     </head>
     <body>
         <div class="background">
@@ -22,11 +22,17 @@
                 <path
                     d="M324.5 0C322.4 34.4 320.2 68.8 308.6 100.3C297 131.8 275.9 160.3 250.8 182.2C225.7 204.1 196.5 219.3 169.3 233C142.1 246.7 116.9 258.9 89 273.9C61.1 288.9 30.6 306.7 0 324.5V0H324.5Z"
                     id="color1" />
-                <path d="M216.3 0C214.9 22.9 213.5 45.9 205.7 66.9C198 87.8 184 106.9 167.2 121.5C150.4 136.1 131 146.2 112.9 155.3C94.7 164.5 77.9 172.6 59.3 182.6C40.7 192.6 20.4 204.5 0 216.3V0H216.3Z" id="color2" />
-                <path d="M108.2 0C107.5 11.5 106.7 22.9 102.9 33.4C99 43.9 92 53.4 83.6 60.7C75.2 68 65.5 73.1 56.4 77.7C47.4 82.2 39 86.3 29.7 91.3C20.4 96.3 10.2 102.2 0 108.2V0H108.2Z" id="color3" />
+                <path
+                    d="M216.3 0C214.9 22.9 213.5 45.9 205.7 66.9C198 87.8 184 106.9 167.2 121.5C150.4 136.1 131 146.2 112.9 155.3C94.7 164.5 77.9 172.6 59.3 182.6C40.7 192.6 20.4 204.5 0 216.3V0H216.3Z"
+                    id="color2" />
+                <path
+                    d="M108.2 0C107.5 11.5 106.7 22.9 102.9 33.4C99 43.9 92 53.4 83.6 60.7C75.2 68 65.5 73.1 56.4 77.7C47.4 82.2 39 86.3 29.7 91.3C20.4 96.3 10.2 102.2 0 108.2V0H108.2Z"
+                    id="color3" />
             </svg>
             <svg class="blob bottom" width="325" height="325" viewBox="0 0 325 325" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.5 325C15 294.9 29.4 264.9 36.8 231.4C44.2 197.8 44.6 160.9 62.5 134.3C80.4 107.7 115.7 91.5 147.5 80.7C179.2 69.9 207.3 64.5 236.3 52C265.3 39.6 295.1 20 325 0.5V325H0.5Z" id="color1" />
+                <path
+                    d="M0.5 325C15 294.9 29.4 264.9 36.8 231.4C44.2 197.8 44.6 160.9 62.5 134.3C80.4 107.7 115.7 91.5 147.5 80.7C179.2 69.9 207.3 64.5 236.3 52C265.3 39.6 295.1 20 325 0.5V325H0.5Z"
+                    id="color1" />
                 <path
                     d="M108.7 325C118.3 305 127.9 284.9 132.9 262.6C137.8 240.2 138.1 215.6 150 197.8C161.9 180.1 185.5 169.3 206.7 162.1C227.8 154.9 246.6 151.3 265.9 143C285.2 134.7 305.1 121.7 325 108.7V325H108.7Z"
                     id="color2" />
@@ -44,7 +50,7 @@
                 </header>
                 <hr />
                 <div class="endpoint">
-                    <div class="endpoint-name"><span class="method">POST</span><code>snip.gay/api/new</code></div>
+                    <div class="endpoint-name"><span class="method">POST</span><code>link.saintkappa.dev/api/new</code></div>
                     <div class="endpoint-content">
                         <div>Request headers: <code class="example-code">Content-Type: application/json</code></div>
                         <div>Request body: <code class="example-code">{ "url": "example.com" }</code>&bull; Note: if you don't provide a url protocol, your snip will default to https</div>
@@ -53,7 +59,7 @@
                             <pre class="example-code">
 {
     "snipId": "DjX",
-    "snipUrl": "https://snip.gay/DjX",
+    "snipUrl": "https://link.saintkappa.dev/DjX",
     "redirectUrl": "https://github.com/theSaintKappa",
     "createdAt": "2023-08-24T22:24:59.096Z",
     "alreadyExisted": true
@@ -64,7 +70,7 @@
                             Example request:
                             <pre class="example-code">
 $ curl --request POST \
-    https://snip.gay/api/new \
+    https://link.saintkappa.dev/api/new \
     --header 'Content-Type: application/json' \
     --data '{ "url": "https://github.com/theSaintKappa" }'
 </pre
@@ -76,7 +82,7 @@ $ curl --request POST \
         </div>
 
         <main>
-            <h1>Long URLs are <span class="rainbow">gay!</span></h1>
+            <h1>Long URLs are <span class="rainbow">bleh!</span></h1>
             <div class="input" data-input>
                 <input type="text" placeholder="so get to snippin'" data-url />
                 <button aria-label="snip it" data-cut></button>
