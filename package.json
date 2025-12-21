@@ -1,29 +1,45 @@
 {
-    "name": "link-snip",
-    "version": "1.2.0",
-    "description": "Snip your long URLs in the snap of a finger!",
-    "main": "dist/index.js",
-    "type": "module",
-    "scripts": {
-        "preinstall": "cd public && npm install && npm run build && cd ../",
-        "postinstall": "tsc",
-        "deploy": "git add . && git commit -m Heroku && git push heroku master",
-        "dev": "nodemon index.ts"
-    },
-    "author": "SaintKappa",
-    "license": "MIT",
-    "dependencies": {
-        "cors": "^2.8.5",
-        "dotenv": "^16.3.1",
-        "express": "^4.18.2",
-        "express-rate-limit": "^6.9.0",
-        "redis": "^4.6.8",
-        "redis-om": "^0.4.2"
-    },
-    "devDependencies": {
-        "@types/cors": "^2.8.13",
-        "@types/express": "^4.17.17",
-        "@types/node": "^20.5.6",
-        "typescript": "^5.2.2"
-    }
+  "name": "linksnip",
+  "version": "2.0.0",
+  "description": "Shorten your long URLs blazingly fast!",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build --compile --target bun --outfile server src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/eden": "^1.4.5",
+    "@elysiajs/openapi": "^1.4.12",
+    "@elysiajs/static": "^1.4.7",
+    "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "elysia": "latest",
+    "lucide-react": "^0.562.0",
+    "nanoid": "^5.1.6",
+    "react": "^19.2.3",
+    "react-confetti-explosion": "^3.0.3",
+    "react-dom": "^19.2.3",
+    "react-hook-form": "^7.69.0",
+    "redis": "^5.10.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4.1.18",
+    "tw-animate-css": "^1.4.0",
+    "zod": "^4.2.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.10",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "bun-plugin-tailwind": "^0.1.2",
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
 }
