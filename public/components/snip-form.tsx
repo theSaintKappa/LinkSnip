@@ -37,7 +37,11 @@ export function SnipForm({ onSuccess }: { onSuccess: (url: string) => void }) {
                 return;
             }
             const snipUrl = `${window.location.origin}/${data.id}`;
-            await navigator.clipboard.writeText(snipUrl);
+            try {
+                await navigator.clipboard.writeText(snipUrl);
+            } catch (e) {
+                console.warn("Failed to copy to clipboard automatically:", e);
+            }
             onSuccess(snipUrl);
             form.reset();
         } catch (error) {
