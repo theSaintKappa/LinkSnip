@@ -11,7 +11,7 @@ redis.on("connect", () => console.log("Connected to Redis"));
 redis.on("error", (err) => console.log("Redis Client Error", err));
 await redis.connect();
 
-export const app = new Elysia()
+const app = new Elysia()
     .use(await staticPlugin({ prefix: "/" }))
     .use(
         openapi({
@@ -77,8 +77,8 @@ export const app = new Elysia()
             return status(500, "INTERNAL_SERVER_ERROR");
         }
     })
-    .listen(3000);
+    .listen(process.env.PORT ?? 3000);
 
-console.log(`Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
+console.log(`Elysia is running at ${app.server?.url}`);
 
 export type App = typeof app;
