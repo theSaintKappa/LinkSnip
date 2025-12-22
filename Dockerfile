@@ -8,6 +8,9 @@ COPY . .
 
 ENV NODE_ENV=production
 
+ARG PUBLIC_APP_URL
+ENV PUBLIC_APP_URL=${PUBLIC_APP_URL}
+
 RUN bun run build:server
 RUN bun run build:public
 
