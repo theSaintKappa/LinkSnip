@@ -44,7 +44,10 @@ const app = new Elysia()
                     }
                 } else {
                     const existingId = await redis.get(`url:${url}`);
-                    if (existingId) return { id: existingId, url, alreadyExists: true };
+                    if (existingId) {
+                        const currentExpireTime = await redis.expireTime(`url:${url}`);
+                        if ((!expiration && currentExpireTime === -1) || (expiration && currentExpireTime === expiration)) return { id: existingId, url, alreadyExists: true };
+                    }
 
                     id = nanoid(3);
                     let tries = 0;
