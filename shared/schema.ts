@@ -8,6 +8,7 @@ export const snipIdSchema = z
     .min(3)
     .max(64)
     .regex(/^[a-zA-Z0-9_-]+$/, { message: "ID can only contain letters, numbers, hyphens, and underscores" });
+export const expirationSchema = z.number().refine((val) => val > Math.floor(Date.now() / 1000), { message: "Expiration must be in the future" });
 
-export const formSchema = (useCustomId: boolean) => z.object({ url: snipUrlSchema, id: useCustomId ? snipIdSchema : z.string().optional() });
-export const apiSchema = z.object({ url: snipUrlSchema, id: snipIdSchema.optional() });
+export const formSchema = ({ useCustomId, useExpiration }: { useCustomId: boolean; useExpiration: boolean }) => z.object({ url: snipUrlSchema, id: useCustomId ? snipIdSchema : z.string().optional(), expiration: useExpiration ? expirationSchema : z.number().optional() });
+export const apiSchema = z.object({ url: snipUrlSchema, id: snipIdSchema.optional(), expiration: expirationSchema.optional() });

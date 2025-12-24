@@ -29,7 +29,7 @@ const app = new Elysia()
     )
     .post(
         "/api/snip",
-        async ({ body: { url, id }, status }) => {
+        async ({ body: { url, id, expiration }, status }) => {
             try {
                 // Add http:// if no protocol is present
                 url = url.match(/^https?:\/\//) ? url : `http://${url}`;
@@ -55,9 +55,9 @@ const app = new Elysia()
                     }
                 }
 
-                await redis.set(`id:${id}`, url);
-                if (isCustom) await redis.set(`url:${url}:custom`, id);
-                else await redis.set(`url:${url}`, id);
+                await redis.set(`id:${id}`, url, expiration ? { expiration: { type: "EXAT", value: expiration } } : undefined);
+                if (isCustom) await redis.set(`url:${url}:custom`, id, expiration ? { expiration: { type: "EXAT", value: expiration } } : undefined);
+                else await redis.set(`url:${url}`, id, expiration ? { expiration: { type: "EXAT", value: expiration } } : undefined);
 
                 return { id, url, alreadyExists: false };
             } catch (error) {
@@ -65,7 +65,7 @@ const app = new Elysia()
                 return status(500, { error: "Internal Server Error" });
             }
         },
-        { body: apiSchema, response: { 200: t.Object({ id: t.String(), url: t.String(), alreadyExists: t.Boolean() }), 409: t.Object({ error: t.String() }), 500: t.Object({ error: t.String() }) } },
+        { body: apiSchema, response: { 200: t.Object({ id: t.String(), url: t.String(), alreadyExists: t.Boolean() }), 409: t.Object({ error: t.String() }), 500: t.Object({ error: t.String() }), 422: t.Object({}) } },
     )
     .get("/:id", async ({ params: { id }, redirect, status }) => {
         try {
