@@ -14,7 +14,12 @@ ENV PUBLIC_APP_URL=${PUBLIC_APP_URL}
 RUN bun run build:server
 RUN bun run build:public
 
-FROM gcr.io/distroless/base
+FROM debian:bookworm-slim
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends ca-certificates curl \
+ && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY --from=build /app/server server
