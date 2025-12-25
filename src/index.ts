@@ -31,9 +31,6 @@ const app = new Elysia()
         "/api/snip",
         async ({ body: { url, id, expiration }, status }) => {
             try {
-                // Add http:// if no protocol is present
-                url = url.match(/^https?:\/\//) ? url : `http://${url}`;
-
                 let isCustom = false;
                 if (id) {
                     isCustom = true;
