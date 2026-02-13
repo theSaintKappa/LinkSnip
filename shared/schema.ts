@@ -25,7 +25,9 @@ export const snipIdSchema = z
     .max(64, { message: "Snip ID must be at most 64 characters long" })
     .regex(/^[a-zA-Z0-9_-]+$/, { message: "Snip ID can only contain letters, numbers, hyphens, and underscores" });
 
-export const expirationSchema = z.number().refine((val) => val > Math.floor(Date.now() / 1000), { message: "Expiration must be in the future" });
+export const expireAtSchema = z.number().refine((val) => val > Math.floor(Date.now() / 1000), { message: "Expiration must be in the future" });
 
-export const formSchema = ({ useCustomId, useExpiration }: { useCustomId: boolean; useExpiration: boolean }) => z.object({ url: snipUrlSchema, id: useCustomId ? snipIdSchema : z.string().optional(), expiration: useExpiration ? expirationSchema : z.number().optional() });
-export const apiSchema = z.object({ url: snipUrlSchema, id: snipIdSchema.optional(), expiration: expirationSchema.optional() });
+export const enableAnalyticsSchema = z.boolean();
+
+export const formSchema = ({ useCustomId, useExpireAt }: { useCustomId: boolean; useExpireAt: boolean }) => z.object({ url: snipUrlSchema, id: useCustomId ? snipIdSchema : z.string().optional(), expireAt: useExpireAt ? expireAtSchema : z.number().optional(), enableAnalytics: enableAnalyticsSchema });
+export const apiSchema = z.object({ url: snipUrlSchema, id: snipIdSchema.optional(), expireAt: expireAtSchema.optional(), enableAnalytics: enableAnalyticsSchema.default(false) });

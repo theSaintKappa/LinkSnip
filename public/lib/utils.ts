@@ -1,6 +1,6 @@
+import type { Dayjs } from "@public/lib/dayjs";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { Dayjs } from "./dayjs";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));

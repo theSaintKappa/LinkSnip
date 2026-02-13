@@ -1,4 +1,4 @@
-FROM oven/bun:1 AS build
+FROM oven/bun:1-alpine AS build
 WORKDIR /app
 
 COPY package.json bun.lock ./
@@ -14,11 +14,9 @@ ENV PUBLIC_APP_URL=${PUBLIC_APP_URL}
 RUN bun run build:server
 RUN bun run build:public
 
-FROM debian:bookworm-slim
+FROM oven/bun:1-alpine
 
-RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates curl \
- && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache curl tar gzip
 
 WORKDIR /app
 

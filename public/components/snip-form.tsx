@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Badge } from "@public/components/ui/badge";
 import { Button } from "@public/components/ui/button";
 import { Calendar } from "@public/components/ui/calendar";
-import { Field, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@public/components/ui/field";
+import { Field, FieldContent, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@public/components/ui/field";
 import { Input } from "@public/components/ui/input";
-import { Label } from "@public/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@public/components/ui/popover";
 import { Switch } from "@public/components/ui/switch";
 import { api } from "@public/lib/api";
-import dayjs, { type Dayjs } from "@public/lib/dayjs";
+import dayjs from "@public/lib/dayjs";
 import { humanizeDiff, publicAppUrl } from "@public/lib/utils";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { formSchema } from "@shared/schema";
@@ -21,7 +21,7 @@ const truncatedAppHost = appHost.length > 30 ? `${appHost.slice(0, 27)}...` : ap
 
 export function SnipForm({ onSuccess }: { onSuccess: (url: string) => void }) {
     const [useCustomId, setUseCustomId] = useState(false);
-    const [useExpiration, setUseExpiration] = useState(false);
+    const [useExpireAt, setUseExpireAt] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const urlInputRef = useRef<HTMLInputElement>(null);
@@ -35,28 +35,24 @@ export function SnipForm({ onSuccess }: { onSuccess: (url: string) => void }) {
 
     const [expirationPickerOpen, setExpirationPickerOpen] = useState(false);
     const now = dayjs().set("second", 0).set("millisecond", 0);
-    const [expiration, setExpiration] = useState<Dayjs>(now.add(1, "day"));
 
     useEffect(() => {
         urlInputRef.current?.focus();
     }, []);
 
     const form = useForm<z.infer<ReturnType<typeof formSchema>>>({
-        resolver: zodResolver(formSchema({ useCustomId, useExpiration })),
-        defaultValues: { url: "", id: "" },
+        resolver: zodResolver(formSchema({ useCustomId, useExpireAt })),
+        defaultValues: { url: "", id: "", expireAt: now.add(1, "day").unix(), enableAnalytics: false },
     });
 
-    useEffect(() => {
-        if (useExpiration && expiration) form.setValue("expiration", expiration.unix(), { shouldValidate: true });
-    }, [expiration, useExpiration, form]);
-
-    async function onSubmit({ url, id, expiration }: z.infer<ReturnType<typeof formSchema>>) {
+    async function onSubmit({ url, id, expireAt, enableAnalytics }: z.infer<ReturnType<typeof formSchema>>) {
         setLoading(true);
         try {
             const { data, error } = await api.snip.post({
                 url,
                 id: useCustomId ? id : undefined,
-                expiration: useExpiration ? expiration : undefined,
+                expireAt: useExpireAt ? expireAt : undefined,
+                enableAnalytics,
             });
             if (error) {
                 if (error.status === 409) form.setError("id", { message: "This Snip ID is already taken by another URL." });
@@ -90,24 +86,11 @@ export function SnipForm({ onSuccess }: { onSuccess: (url: string) => void }) {
     };
 
     const handleUseExpiration = (checked: boolean) => {
-        setUseExpiration(checked);
+        setUseExpireAt(checked);
         if (!checked) {
-            form.clearErrors("expiration");
+            form.clearErrors("expireAt");
             setTimeout(() => urlInputRef.current?.focus(), 0);
         }
-    };
-
-    const handleDateChange = (date: Date | undefined) => {
-        if (!expiration || !date) return;
-        const dayjsDate = dayjs(date);
-        setExpiration((prev) => prev.year(dayjsDate.year()).month(dayjsDate.month()).date(dayjsDate.date()));
-        setExpirationPickerOpen(false);
-    };
-
-    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!expiration) return;
-        const [hours, minutes] = e.target.value.split(":").map(Number);
-        setExpiration((prev) => prev.set("hour", hours).set("minute", minutes));
     };
 
     return (
@@ -131,14 +114,16 @@ export function SnipForm({ onSuccess }: { onSuccess: (url: string) => void }) {
                 <FieldLegend variant="label" className="uppercase text-muted-foreground">
                     Advanced Options
                 </FieldLegend>
-                <FieldGroup className="gap-3">
-                    <div className="flex items-center justify-between flex-row-reverse">
-                        <Switch id="custom-id" checked={useCustomId} onCheckedChange={handleUseCustomId} />
-                        <Label className="cursor-pointer" htmlFor="custom-id">
-                            <Hash className="inline size-4 text-muted-foreground" />
-                            Custom Snip ID
-                        </Label>
-                    </div>
+                <FieldGroup className="gap-2">
+                    <Field orientation="horizontal" className="items-center!">
+                        <FieldContent>
+                            <FieldLabel htmlFor="custom-id" className="cursor-pointer">
+                                <Hash className="inline size-4 text-muted-foreground" />
+                                Custom Snip ID
+                            </FieldLabel>
+                        </FieldContent>
+                        <Switch id="custom-id" name="custom-id" checked={useCustomId} onCheckedChange={handleUseCustomId} />
+                    </Field>
                     {useCustomId && (
                         <Controller
                             name="id"
@@ -160,56 +145,97 @@ export function SnipForm({ onSuccess }: { onSuccess: (url: string) => void }) {
                         />
                     )}
                 </FieldGroup>
-                <FieldGroup className="gap-3">
-                    <div className="flex items-center justify-between flex-row-reverse">
-                        <Switch id="expiration" checked={useExpiration} onCheckedChange={handleUseExpiration} />
-                        <Label className="cursor-pointer" htmlFor="expiration">
-                            <CalendarClock className="inline size-4 text-muted-foreground" />
-                            Expiration Date
-                        </Label>
-                    </div>
-                    {useExpiration && (
-                        <Field className="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1">
-                            <VisuallyHidden>
-                                <FieldLabel htmlFor="date-picker">Expiration Date</FieldLabel>
-                            </VisuallyHidden>
-                            <Popover open={expirationPickerOpen} onOpenChange={setExpirationPickerOpen}>
-                                <PopoverTrigger asChild>
-                                    <Button variant="outline" className="justify-between font-normal" id="date-picker">
-                                        {expiration ? expiration.toDate().toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short", year: "numeric" }) : "Select date"}
-                                        <CalendarIcon className="text-muted-foreground" />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                                    <Calendar mode="single" selected={expiration.toDate()} captionLayout="label" disabled={{ before: now.toDate() }} onSelect={handleDateChange} />
-                                </PopoverContent>
-                            </Popover>
-                            <div className="relative flex items-center">
-                                <VisuallyHidden>
-                                    <FieldLabel htmlFor="time-input">Expiration Time</FieldLabel>
-                                </VisuallyHidden>
-                                <Input
-                                    id="time-input"
-                                    type="time"
-                                    step="60"
-                                    value={expiration ? `${expiration.get("hour").toString().padStart(2, "0")}:${expiration.get("minute").toString().padStart(2, "0")}` : ""}
-                                    onChange={handleTimeChange}
-                                    aria-invalid={!!form.formState.errors.expiration}
-                                    className="appearance-none pr-7 shadow-xs cursor-pointer bg-background dark:bg-input/30 hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/50 aria-invalid:text-destructive [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                                />
-                                <Clock className="absolute right-2 size-4 text-muted-foreground pointer-events-none" />
-                            </div>
-                            {form.formState.errors.expiration ? form.formState.errors.expiration && <FieldError className="col-span-2">{form.formState.errors.expiration.message}</FieldError> : expiration && <p className="col-span-2 text-sm text-muted-foreground">{humanizeDiff(now, expiration)}</p>}
-                        </Field>
+                <FieldGroup className="gap-2">
+                    <Field orientation="horizontal" className="items-center!">
+                        <FieldContent>
+                            <FieldLabel htmlFor="expiration" className="cursor-pointer">
+                                <CalendarClock className="inline size-4 text-muted-foreground" />
+                                Expiration Date
+                            </FieldLabel>
+                        </FieldContent>
+                        <Switch id="expiration" name="expiration" checked={useExpireAt} onCheckedChange={handleUseExpiration} />
+                    </Field>
+                    {useExpireAt && (
+                        <Controller
+                            name="expireAt"
+                            control={form.control}
+                            render={({ field, fieldState }) => {
+                                const dateValue = field.value ? dayjs.unix(field.value) : undefined;
+
+                                const onDateSelect = (date: Date | undefined) => {
+                                    if (!date) return;
+                                    const dayjsDate = dayjs(date);
+                                    const current = dateValue || now.add(1, "day");
+                                    const newValue = current.year(dayjsDate.year()).month(dayjsDate.month()).date(dayjsDate.date());
+                                    field.onChange(newValue.unix());
+                                    setExpirationPickerOpen(false);
+                                };
+
+                                const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                                    const [hours, minutes] = e.target.value.split(":").map(Number);
+                                    const current = dateValue || now.add(1, "day");
+                                    const newValue = current.set("hour", hours).set("minute", minutes);
+                                    field.onChange(newValue.unix());
+                                };
+
+                                return (
+                                    <Field className="grid grid-cols-[1fr_auto] gap-x-2 gap-y-1">
+                                        <VisuallyHidden>
+                                            <FieldLabel htmlFor="date-picker">Expiration Date</FieldLabel>
+                                        </VisuallyHidden>
+                                        <Popover open={expirationPickerOpen} onOpenChange={setExpirationPickerOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button variant="outline" className="justify-between font-normal" id="date-picker">
+                                                    {dateValue ? dateValue.toDate().toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short", year: "numeric" }) : "Select date"}
+                                                    <CalendarIcon className="text-muted-foreground" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                                                <Calendar mode="single" selected={dateValue?.toDate()} captionLayout="label" disabled={{ before: now.toDate() }} onSelect={onDateSelect} />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <div className="relative flex items-center">
+                                            <VisuallyHidden>
+                                                <FieldLabel htmlFor="time-input">Expiration Time</FieldLabel>
+                                            </VisuallyHidden>
+                                            <Input
+                                                id="time-input"
+                                                type="time"
+                                                step="60"
+                                                value={dateValue ? `${dateValue.get("hour").toString().padStart(2, "0")}:${dateValue.get("minute").toString().padStart(2, "0")}` : ""}
+                                                onChange={onTimeChange}
+                                                aria-invalid={fieldState.invalid}
+                                                className="appearance-none pr-7 shadow-xs cursor-pointer bg-background dark:bg-input/30 hover:bg-accent hover:text-accent-foreground dark:hover:bg-input/50 aria-invalid:text-destructive [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                            />
+                                            <Clock className="absolute right-2 size-4 text-muted-foreground pointer-events-none" />
+                                        </div>
+                                        {fieldState.error ? <FieldError className="col-span-2">{fieldState.error.message}</FieldError> : dateValue && <p className="col-span-2 text-sm text-muted-foreground">{humanizeDiff(now, dateValue)}</p>}
+                                    </Field>
+                                );
+                            }}
+                        />
                     )}
                 </FieldGroup>
-                <div className="flex items-center justify-between flex-row-reverse">
-                    <Switch id="track-usage" disabled />
-                    <Label className="cursor-pointer" htmlFor="track-usage">
-                        <ChartColumn className="inline size-4 text-muted-foreground" />
-                        Track usage (coming soon)
-                    </Label>
-                </div>
+                <FieldGroup>
+                    <Controller
+                        name="enableAnalytics"
+                        control={form.control}
+                        render={({ field }) => (
+                            <Field orientation="horizontal" className="items-center!">
+                                <FieldContent>
+                                    <FieldLabel htmlFor="track-usage" className="cursor-pointer">
+                                        <ChartColumn className="inline size-4 text-muted-foreground" />
+                                        Track usage
+                                        <Badge variant="secondary" className="font-semibold leading-none">
+                                            NEW
+                                        </Badge>
+                                    </FieldLabel>
+                                </FieldContent>
+                                <Switch id="track-usage" name={field.name} checked={field.value} onCheckedChange={field.onChange} />
+                            </Field>
+                        )}
+                    />
+                </FieldGroup>
             </FieldSet>
             <FieldGroup>
                 <Field>
